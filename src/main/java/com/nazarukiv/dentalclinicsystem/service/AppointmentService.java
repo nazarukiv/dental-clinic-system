@@ -11,6 +11,7 @@ import com.nazarukiv.dentalclinicsystem.repository.AppointmentRepository;
 import com.nazarukiv.dentalclinicsystem.repository.DentistRepository;
 import com.nazarukiv.dentalclinicsystem.repository.PatientRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -53,5 +54,13 @@ public class AppointmentService {
         appointment.setStatus(AppointmentStatus.BOOKED);
 
         return appointmentRepository.save(appointment);
+    }
+
+    public List<Appointment> getAppointmentsByStatus(AppointmentStatus status) {
+        return appointmentRepository.findAllByStatus(status);
+    }
+
+    public List<Appointment> getAppointmentsByPatientId(Long patientId) {
+        return appointmentRepository.findAllByPatientId(patientId);
     }
 }

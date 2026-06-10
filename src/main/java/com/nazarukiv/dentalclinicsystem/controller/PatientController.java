@@ -6,12 +6,17 @@ import com.nazarukiv.dentalclinicsystem.entity.Patient;
 import com.nazarukiv.dentalclinicsystem.exception.PatientNotFoundException;
 import com.nazarukiv.dentalclinicsystem.mapper.PatientMapper;
 import com.nazarukiv.dentalclinicsystem.service.PatientService;
-import java.util.List;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,11 +32,15 @@ public class PatientController {
     }
 
     @GetMapping
-    public List<PatientResponse> getAllPatients() {
-        return patientService.getAllPatients()
-                .stream()
-                .map(patientMapper::toResponse)
-                .toList();
+    public Page<PatientResponse> getPatients(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<Patient> patients = patientService.getPatients(pageable);
+
+        return patients.map(patientMapper::toResponse);
     }
 
     @GetMapping("/{id}")
@@ -43,7 +52,7 @@ public class PatientController {
     }
 
     @PostMapping
-    public PatientResponse createPatient(@RequestBody CreatePatientRequest request) {
+    public PatientResponse createPatient(@Valid @RequestBody CreatePatientRequest request) {
         Patient patient = patientMapper.toEntity(request);
         Patient savedPatient = patientService.createPatient(patient);
 
