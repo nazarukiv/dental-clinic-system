@@ -1,3 +1,11 @@
 spring:
-  application:
-    name: dental-clinic-system
+  datasource:
+    url: jdbc:mysql://localhost:8889/dental_clinic
+    username: root
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
