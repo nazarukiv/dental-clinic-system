@@ -1,19 +1,22 @@
 package com.nazarukiv.dentalclinicsystem.dto;
 
-import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 public class CreateAppointmentRequest {
 
     @NotNull(message = "must not be null")
+    @Positive(message = "must be greater than zero")
     private Long patientId;
 
     @NotNull(message = "must not be null")
+    @Positive(message = "must be greater than zero")
     private Long dentistId;
 
     @NotNull(message = "must not be null")
-    @FutureOrPresent(message = "must be in the present or future")
+    @Future(message = "must be in the future")
     private LocalDateTime appointmentTime;
 
     public Long getPatientId() {
